@@ -3,12 +3,25 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float damage;
-    public int per; //관통변수
+    public int per; 
 
-    public void Init(float damage,int per)
+    Rigidbody2D rigid;
+
+    void Awake()
     {
-        this.damage = damage; //this는 해당 클래스의 변수로 접근 즉 this.damage는 위에 선언한 변수
+        rigid = GetComponent<Rigidbody2D>();     
+    }
+
+    [System.Obsolete]
+    public void Init(float damage,int per,Vector3 dir)
+    {
+        this.damage = damage; 
         this.per = per;
+        
+        if(per >-1)
+        {
+            rigid.velocity = dir *15f;
+        }
     }
 
     

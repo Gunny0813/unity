@@ -13,13 +13,10 @@ public class Weapon : MonoBehaviour
     float timer;
     Player player;
 
-    void Start()
-    {
-        Init();    
-    }
+  
     void Awake()
     {
-        player = GetComponentInParent<Player>();    
+        player = GameManager.instance.player;   
     }
     // Update is called once per frame
     void Update()
@@ -53,11 +50,30 @@ public class Weapon : MonoBehaviour
         {
             Batch();
         }
+
+        player.BroadcastMessage("ApplyGear",SendMessageOptions.DontRequireReceiver);
     }
 
 
-    public void Init()
+    public void Init(ItemData data)
     {
+        //Basic set
+        name = "Weapon" + data.itemId;
+        transform.parent = player.transform;
+        transform.localPosition = Vector3.zero;
+
+        //property set
+        id = data.itemId;
+        damage = data.baseDamage;
+        count = data.baseCount;
+
+        for(int index = 0; index < GameManager.instance.pool.prefabs.Length; index++) {
+            if(data.projectile == GameManager.instance.pool.prefabs[index])
+            {
+                prefabid = index;
+                break;
+            }
+        }
         switch (id)
         {
             case 0:
@@ -69,7 +85,8 @@ public class Weapon : MonoBehaviour
                 speed = 0.3f;
                 break;
         }
-        
+
+        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
     
 
